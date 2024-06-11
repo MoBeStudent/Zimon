@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+<body class="text-center">
+    <div class="container">
+        <form method="POST" class="form-register" action="/login" style="color:black">
+            <br>
+            <br>
+            <h1 class="h3 mb-3 font-weight-normal">
+                Please Login
+            </h1>
+
+            <label for="Username" class="form-label">Username</label>
+            <input type="text" id="Username" name="Username" class="form-control">
+            <label for="Password" class="form-label">Password</label>
+            <input type="password" id="Password" name="Password" class="form-control" aria-describedby="passwordHelpBlock">
+
+            <br>
+            {% for message in get_flashed_messages() %}
+            <div class="alert alert-danger">{{ message }}</div>
+             {% endfor %}
+             <br>
+            <button type="submit" class="btn btn-dark">Login</button>
+
+        </form>
+    </div>
+</body>
+
+</body>
+{% endblock %}

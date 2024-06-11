@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Quiz bearbeiten
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Quiz bearbeiten</h1>
+    <p class="mb-4">Bearbeite den Titel deines Quizzes und die Fragen.</p>
+
+    {% if flash_messages %}
+        <div class="alert alert-warning">
+            {% for message in flash_messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title">Quiztitel bearbeiten</h2>
+            <form method="POST" action="{{ url_for('edit_quiz', quiz_id=quiz._id) }}">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Titel</label>
+                    <input type="text" class="form-control" id="title" name="title" value="{{ quiz.title }}" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Änderungen speichern</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">Fragen bearbeiten</h2>
+            {% for question in quiz.questions %}
+            <div class="mb-3">
+                <form method="POST" action="{{ url_for('edit_question', quiz_id=quiz._id, question_id=loop.index0) }}">
+                    <label for="question{{ loop.index0 }}" class="form-label">Frage {{ loop.index0 + 1 }}</label>
+                    <input type="text" class="form-control" id="question{{ loop.index0 }}" name="question" value="{{ question.question }}" required>
+                    <label for="answer{{ loop.index0 }}" class="form-label">Antwort</label>
+                    <input type="text" class="form-control" id="answer{{ loop.index0 }}" name="answer" value="{{ question.answer }}" required>
+                    <button type="submit" class="btn btn-primary mt-2">Änderungen speichern</button>
+                </form>
+            </div>
+            {% endfor %}
+            <!-- Neues Frageformular -->
+            <div class="mb-3">
+                <form method="POST" action="{{ url_for('add_question', quiz_id=quiz._id) }}">
+                    <label for="new_question" class="form-label">Neue Frage</label>
+                    <input type="text" class="form-control" id="new_question" name="new_question" required>
+                    <label for="new_answer" class="form-label">Antwort</label>
+                    <input type="text" class="form-control" id="new_answer" name="new_answer" required>
+                    <button type="submit" class="btn btn-primary mt-2">Frage hinzufügen</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

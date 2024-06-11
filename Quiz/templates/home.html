@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Willkommen</h1>
+      {% if quizzes %}
+        <h2>Verfügbare Quizze:</h2>
+        <ul>
+          {% for quiz in quizzes %}
+            <li>
+              <strong>{{ quiz.title }}</strong> - <strong>von: {{quiz.created_by}}</strong>
+              <a href="{{ url_for('quiz', quiz_id=quiz._id) }}">Quiz spielen</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>Keine Quizze verfügbar.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ quiz.title }}</h5>
+          <p class="card-text">{{ quiz.description }}</p>
+          <form id="quizForm" onsubmit="return validateQuiz(event);">
+            {% for question in quiz.questions %}
+            <div class="mb-3">
+              <p>{{ question.question }}</p>
+              <input type="text" class="form-control" name="answer_{{ loop.index }}" required>
+              <small id="feedback_{{ loop.index }}"></small>
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Quiz abschließen</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function validateQuiz(event) {
+  event.preventDefault();
+  var form = event.target;
+  var inputs = form.getElementsByTagName('input');
+  var feedbacks = form.getElementsByTagName('small');
+
+  var correctAnswers = JSON.parse('{{ quiz.questions | tojson | safe }}');
+
+  var allCorrect = true;
+  for (var i = 0; i < inputs.length; i++) {
+    var userAnswer = inputs[i].value.trim().toLowerCase();
+    var correctAnswer = correctAnswers[i].answer.toLowerCase();
+    if (userAnswer !== correctAnswer) {
+      allCorrect = false;
+      feedbacks[i].innerHTML = 'Falsch! Die richtige Antwort ist: ' + correctAnswer;
+      feedbacks[i].classList.add('text-danger');
+    } else {
+      feedbacks[i].innerHTML = 'Richtig!';
+      feedbacks[i].classList.add('text-success');
+    }
+  }
+
+  executeScripts(feedbacks);
+
+  return allCorrect;
+}
+
+function executeScripts(feedbacks) {
+  for (var i = 0; i < feedbacks.length; i++) {
+    var feedback = feedbacks[i];
+    var scriptTags = feedback.getElementsByTagName('script');
+    for (var j = 0; j < scriptTags.length; j++) {
+      var script = scriptTags[j].innerHTML;
+      eval(script);
+    }
+  }
+}
+</script>
+{% endblock %}
+
